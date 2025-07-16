@@ -1,0 +1,13 @@
+streams:
+    ipcam: "rtsp://username:password@ipAddress:554/s0"
+    # birdcam uses a custom overlay and audio track for the camera stream
+    birdcam: ffmpeg:rtsp://username:password@ipAddress:554/s0#hardware#video=h264#raw=-i /images/birdcam-overlay-2560x1440.png -f lavfi -i anullsrc=cl=mono:r=48000 -filter_complex "[0:v][1:v]overlay=x=0:y=main_h-overlay_h,drawtext=text='Bird Camera Live Feed':x=450:y=main_h-text_h-225:fontsize=120:fontcolor=white:box=1:boxcolor=black@0.0,scale=1920:1080[v];amovie='/audio/birds.mp3':loop=0,volume=1[bgm];[2:a][bgm]amix=inputs=2:duration=first[audio]" -map "[v]" -map "[audio]" -preset veryfast -crf 28 -shortest
+
+
+api:
+    listen: ":1984"
+    username: ""
+    password: ""
+    origin: "*"
+    tls_listen: ""
+    unix_listen: "/tmp/go2rtc.sock"  # default "", unix socket listener for API
